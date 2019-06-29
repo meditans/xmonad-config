@@ -80,6 +80,7 @@ startUp :: X ()
 startUp = do
     spawnOnce "compton"
     spawnOnce $ "conky -c ~/.xmonad/bottom.conky | " <> toDzenInvocation (DzenConfig 0 1056 24 screenWidth DZenCenter Nothing)
+    spawnOnce $ "feh --bg-scale ~/.xmonad/wallpaper.jpg"
     setWMName "LG3D"
 
 logbar :: Handle -> X ()
