@@ -14,10 +14,10 @@ conky.text = [[
 ^i(/home/carlo/.xmonad/icons/cpu1.xbm)  ${execi 60 nvidia-settings -query GPUCoreTemp| grep gpu | perl -ne 'print $1 if /GPUCoreTemp.*?: (\d+)./;'}°C \
 ^fg(\#505E73)  //   ^fg()\
 ^fg() ^i(/home/carlo/.xmonad/icons/info1.xbm) ^fg() \
-${execi 0.1 ~/.scripts/net/killer-down}^i(/home/carlo/.xmonad/icons/downarrow5.xbm)^fg()\
-${execi 0.1 ~/.scripts/net/killer-up} ^i(/home/carlo/.xmonad/icons/uparrow5.xbm)^fg()\
+${execi 0.1 /home/carlo/.xmonad/scripts/killer-down}^i(/home/carlo/.xmonad/icons/downarrow5.xbm)^fg()\
+${execi 0.1 /home/carlo/.xmonad/scripts/killer-up} ^i(/home/carlo/.xmonad/icons/uparrow5.xbm)^fg()\
 ^fg(\#505E73)  //   ^fg()\
 ^fg() ^i(/home/carlo/.xmonad/icons/wireless1.xbm) ^fg() \
-${execi 0.1 ~/.scripts/net/wifi-down}^i(/home/carlo/.xmonad/icons/downarrow5.xbm)^fg()\
-${execi 0.1 ~/.scripts/net/wifi-up} ^i(/home/carlo/.xmonad/icons/uparrow5.xbm)^fg()\
+${execi 0.1 /home/carlo/.xmonad/scripts/wifi-down}^i(/home/carlo/.xmonad/icons/downarrow5.xbm)^fg()\
+${execi 0.1 /home/carlo/.xmonad/scripts/wifi-up} ^i(/home/carlo/.xmonad/icons/uparrow5.xbm)^fg()\
 ]]
