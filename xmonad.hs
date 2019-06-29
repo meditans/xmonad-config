@@ -15,6 +15,7 @@ import XMonad.Layout.Spacing
 import XMonad.Layout.ResizableTile
 import XMonad.Layout.LayoutModifier
 import XMonad.Layout.WindowArranger
+import XMonad.Layout.TwoPane
 import XMonad.Layout.NoBorders
 import XMonad.Layout.Fullscreen
 import XMonad.Layout.Circle
@@ -117,19 +118,21 @@ ful = noBorders (fullscreenFull Full)
 
 -- useless gap --
 
-layout ::
-  Choose
-    (ModifiedLayout
-       Gaps
-       (ModifiedLayout
-          AvoidStruts (ModifiedLayout Spacing ResizableTall)))
-    (Choose
-       Circle
-       (ModifiedLayout WithBorder (ModifiedLayout FullscreenFull Full)))
-    Window
+layout :: Choose
+                  (ModifiedLayout
+                     Gaps
+                     (ModifiedLayout
+                        AvoidStruts (ModifiedLayout Spacing ResizableTall)))
+                  (Choose
+                     Circle
+                     (Choose
+                        (ModifiedLayout WithBorder (ModifiedLayout FullscreenFull Full))
+                        TwoPane))
+                  Window
 layout = (gaps [(U, 32), (R, 8), (L, 8), (D, 32)] $ avoidStruts (spacingRaw False (uniformBorder 0) False (uniformBorder 2) True res))
      ||| Circle
      ||| ful
+     ||| TwoPane (3/100) (2/3)
   where
     uniformBorder i = Border i i i i
 
