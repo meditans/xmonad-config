@@ -79,7 +79,7 @@ mKeys = [ ((modm, xK_p), spawn $ dmenu)
 startUp :: X ()
 startUp = do
     spawnOnce "compton"
-    spawnOnce "conky -c ~/.conky/bottom.conky | dzen2 -y 1056 -w 1920 -h 24"
+    spawnOnce $ "conky -c ~/.conky/bottom.conky | " <> toDzenInvocation (DzenConfig 0 1056 24 screenWidth DZenCenter Nothing)
     setWMName "LG3D"
 
 logbar :: Handle -> X ()
@@ -134,11 +134,41 @@ layout = (gaps [(U, 32), (R, 8), (L, 8), (D, 32)] $ avoidStruts (spacingRaw Fals
 
 ------------
 
+data DzenPosition = DZenLeft | DZenCenter | DZenRight
+
+instance Show DzenPosition where
+  show DZenLeft   = "l"
+  show DZenCenter = "c"
+  show DZenRight  = "r"
+
+data DzenConfig = DzenConfig
+  { xPosition :: Int
+  , yPosition :: Int
+  , height :: Int
+  , width :: Int
+  , position :: DzenPosition
+  , persistent :: Maybe Int
+  }
+
+toDzenInvocation :: DzenConfig -> String
+toDzenInvocation (DzenConfig x y h w pos per) =
+  unwords
+    [ "dzen2"
+    , "-x " <> show x
+    , "-y " <> show y
+    , "-h " <> show h
+    , "-w " <> show w
+    , "-ta " <> show pos
+    , maybe "-p" (\s -> "-p " <> show s) per
+    , "-e ''" ]
+
+screenWidth :: Int
+screenWidth = 2560
+
 main :: IO ()
 main = do
-    bar  <- spawnPipe panel
-    _    <- spawnPipe "conky -c ~/.conky/top.conky |\
-                      \dzen2 -x 400 -y 0 -h 24 -w 1520 -p -ta r -e''"
+    bar  <- spawnPipe $ toDzenInvocation (DzenConfig 0 0 24 400 DZenLeft Nothing)
+    _    <- spawnPipe $ "conky -c ~/.conky/top.conky | " <> toDzenInvocation (DzenConfig 400 0 24 screenWidth DZenRight Nothing)
     xmonad $ def
         { manageHook = manageDocks <+> manageHook def
         , layoutHook = windowArrange layout
@@ -151,5 +181,3 @@ main = do
         , normalBorderColor = normBord
         , logHook = logbar bar
         } `additionalKeys` mKeys
-        where panel = "dzen2 -ta l -p -w 400 -y 0 -x 0 -h 24 -e ''"
-
