@@ -13,7 +13,7 @@ conky.text = [[
 ^fg()(${mpd_elapsed}/${mpd_length}) \
 ^ca()^ca()^ca()  \
 ^fg(\#505E73)   //   ^fg() \
-^i(/home/carlo/.icons/stlarch/vol7.xbm) ^ca(4, amixer set Master 2%+)^ca(5, amixer set Master 2%-) \
+^i(/home/carlo/.xmonad/icons/vol7.xbm) ^ca(4, amixer set Master 2%+)^ca(5, amixer set Master 2%-) \
 ${exec amixer sget Master | grep -m1 "]" | cut -d "[" -f2 | cut -d "]" -f1}  \
 ^ca()^ca()   \
 ^bg(\#da8548)^fg(\#1b2229)      ${time %R}      ^bg()^fg()

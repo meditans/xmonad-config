@@ -102,7 +102,7 @@ tryPP h = def
                     "Circle" -> " " ++ i ++ "dice2.xbm) CIRC "
                     _ -> " " ++ i ++ "tile.xbm) TALL "
                 )
-    } where i = "^i(/home/carlo/.icons/stlarch/"
+    } where i = "^i(/home/carlo/.xmonad/icons/"
 
 
 
