@@ -9,11 +9,11 @@ import XMonad.Util.Run        (spawnPipe)
 import XMonad.Util.EZConfig   (additionalKeys)
 import XMonad.Util.SpawnOnce
 
-import Data.List
 import qualified XMonad.StackSet as W
 
 import XMonad.Layout.Spacing
 import XMonad.Layout.ResizableTile
+import XMonad.Layout.LayoutModifier
 import XMonad.Layout.WindowArranger
 import XMonad.Layout.NoBorders
 import XMonad.Layout.Fullscreen
@@ -23,10 +23,12 @@ import XMonad.Layout.Gaps
 import XMonad.Actions.CycleWS (prevWS, nextWS)
 
 import System.IO
+import Data.Semigroup
 
 
 -- namd options ----------------------------------------------------------------
 -- colours
+normBord, focdBord, fore, back, winType :: String
 normBord = "#343C48"
 focdBord = "#6986a0"
 fore     = "#DEE3E0"
@@ -34,6 +36,7 @@ back     = "#282c34"
 winType  = "#c678dd"
 
 -- programs
+dmenu :: String
 dmenu = "dmenu_run -fn 'xft:Fira Mono:pixelsize=20' -p 'Run: '"
 -----------
 
@@ -41,9 +44,10 @@ myWorkspaces    :: [String]
 myWorkspaces    = click $ [" 1 "," 2 "," 3 "," 4 "," 5 "," 6 "," 7 "," 8 "," 9 "]
                   where click l = [ "^ca(1, xdotool key super+"
                                   ++ show (n) ++ ")" ++ ws ++ "^ca()" |
-                                  (i,ws) <- zip [1..] l,
+                                  (i,ws) <- zip [(1::Int)..] l,
                                   let n = i]
 
+myManageHook :: Query (Endo (W.StackSet String (Layout Window) Window ScreenId ScreenDetail))
 myManageHook = composeAll
     [ className =? "Firefox"   --> doF(W.shift(myWorkspaces !! 2))
     , className =? "Nautilus"  --> doFloat
@@ -51,6 +55,7 @@ myManageHook = composeAll
     ]
 
 -- keys
+mKeys :: [((KeyMask, KeySym), X ())]
 mKeys = [ ((modm, xK_p), spawn $ dmenu)
         , ((modm, xK_f), spawn $ "firefox")
         , ((modm, xK_c), spawn $ "chromium")
@@ -102,7 +107,7 @@ tryPP h = def
     , ppHidden             = dzenColor (fore) (back) . pad
     , ppHiddenNoWindows    = dzenColor (fore) (back) . pad
     , ppUrgent             = dzenColor (fore) (focdBord) . pad
-    , ppOrder              = \(ws:l:t:_) -> [ws,l]
+    , ppOrder              = \(ws:l:_:_) -> [ws,l]
     , ppSep                = ""
     , ppLayout             = dzenColor (fore) (winType) .
                 ( \t -> case t of
@@ -120,18 +125,33 @@ tryPP h = def
 res :: ResizableTall a
 res = ResizableTall 1 (2/100) (1/2) []
 
+ful :: ModifiedLayout WithBorder (ModifiedLayout FullscreenFull Full) Window
 ful = noBorders (fullscreenFull Full)
 
 -- useless gap --
 
-layout = (gaps [(U, 32), (R, 8), (L, 8), (D, 32)] $ avoidStruts (spacing 2 $ res))
+layout ::
+  Choose
+    (ModifiedLayout
+       Gaps
+       (ModifiedLayout
+          AvoidStruts (ModifiedLayout Spacing ResizableTall)))
+    (Choose
+       Circle
+       (ModifiedLayout WithBorder (ModifiedLayout FullscreenFull Full)))
+    Window
+layout = (gaps [(U, 32), (R, 8), (L, 8), (D, 32)] $ avoidStruts (spacingRaw False (uniformBorder 0) False (uniformBorder 2) True res))
      ||| Circle
      ||| ful
+  where
+    uniformBorder i = Border i i i i
+
 ------------
 
+main :: IO ()
 main = do
     bar  <- spawnPipe panel
-    info <- spawnPipe "conky -c ~/.conky/top.conky |\
+    _    <- spawnPipe "conky -c ~/.conky/top.conky |\
                       \dzen2 -x 400 -y 0 -h 24 -w 1520 -p -ta r -e''"
     xmonad $ def
         { manageHook = manageDocks <+> manageHook def
