@@ -53,6 +53,7 @@ myManageHook = composeAll
 -- keys
 mKeys = [ ((modm, xK_p), spawn $ dmenu)
         , ((modm, xK_f), spawn $ "firefox")
+        , ((modm, xK_c), spawn $ "chromium")
         , ((modm, xK_e), spawn $ "emacs")
         , ((modm .|. controlMask .|. shiftMask, xK_l), spawn $ "systemctl suspend")
         , ((modm, xK_Left), prevWS)
