@@ -20,8 +20,6 @@ import XMonad.Layout.Fullscreen
 import XMonad.Layout.Circle
 import XMonad.Layout.Gaps
 
-import XMonad.Actions.CycleWS (prevWS, nextWS)
-
 import System.IO
 import Data.Semigroup
 
@@ -61,8 +59,6 @@ mKeys = [ ((modm, xK_p), spawn $ dmenu)
         , ((modm, xK_c), spawn $ "chromium")
         , ((modm, xK_e), spawn $ "emacs")
         , ((modm .|. controlMask .|. shiftMask, xK_l), spawn $ "systemctl suspend")
-        , ((modm, xK_Left), prevWS)
-        , ((modm, xK_Right), nextWS)
         , ((modm                 .|. shiftMask, xK_z    ), spawn "slock"                 )
         , ((modm .|. controlMask              , xK_s    ), sendMessage  Arrange          )
         , ((modm .|. controlMask .|. shiftMask, xK_s    ), sendMessage  DeArrange        )
@@ -78,16 +74,6 @@ mKeys = [ ((modm, xK_p), spawn $ dmenu)
         , ((modm .|. controlMask .|. shiftMask, xK_Right), sendMessage (DecreaseRight 10))
         , ((modm .|. controlMask .|. shiftMask, xK_Down ), sendMessage (DecreaseDown  10))
         , ((modm .|. controlMask .|. shiftMask, xK_Up   ), sendMessage (DecreaseUp    10))
-        , ((modm, xK_KP_Add), sequence_ [ sendMessage (IncreaseLeft 10)
-                    , sendMessage (IncreaseRight 10)
-                    , sendMessage (IncreaseUp 10)
-                    , sendMessage (IncreaseDown 10)
-                    ])
-        , ((modm, xK_KP_Subtract), sequence_ [ sendMessage (DecreaseLeft 10)
-                         , sendMessage (DecreaseRight 10)
-                         , sendMessage (DecreaseUp 10)
-                         , sendMessage (DecreaseDown 10)
-                         ])
     ] where modm = mod4Mask
 
 startUp :: X ()
