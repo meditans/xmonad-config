@@ -79,7 +79,7 @@ mKeys = [ ((modm, xK_p), spawn $ dmenu)
 startUp :: X ()
 startUp = do
     spawnOnce "compton"
-    spawnOnce $ "conky -c ~/.conky/bottom.conky | " <> toDzenInvocation (DzenConfig 0 1056 24 screenWidth DZenCenter Nothing)
+    spawnOnce $ "conky -c ~/.xmonad/bottom.conky | " <> toDzenInvocation (DzenConfig 0 1056 24 screenWidth DZenCenter Nothing)
     setWMName "LG3D"
 
 logbar :: Handle -> X ()
@@ -168,7 +168,7 @@ screenWidth = 2560
 main :: IO ()
 main = do
     bar  <- spawnPipe $ toDzenInvocation (DzenConfig 0 0 24 400 DZenLeft Nothing)
-    _    <- spawnPipe $ "conky -c ~/.conky/top.conky | " <> toDzenInvocation (DzenConfig 400 0 24 screenWidth DZenRight Nothing)
+    _    <- spawnPipe $ "conky -c ~/.xmonad/top.conky | " <> toDzenInvocation (DzenConfig 400 0 24 screenWidth DZenRight Nothing)
     xmonad $ def
         { manageHook = manageDocks <+> manageHook def
         , layoutHook = windowArrange layout
